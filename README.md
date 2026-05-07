@@ -49,11 +49,12 @@ The output jar will be in `build/libs/`.
 
 ## Compatibility
 
-| Minecraft | Status              |
-|-----------|---------------------|
-| 1.21.4    | ✅ Supported         |
-| 1.21.x    | Planned             |
-| 1.20.x    | Planned             |
+| Minecraft     | Status                          |
+|---------------|---------------------------------|
+| 1.21.4        | ✅ Tested                       |
+| 1.21.2 – 1.21.x | ✅ Supported (please report issues) |
+| 1.21.0, 1.21.1 | ❌ Not supported (no `EntityRenderState`) |
+| 1.20.x        | Planned                         |
 
 ## License
 
