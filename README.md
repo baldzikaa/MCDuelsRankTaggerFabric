@@ -49,12 +49,14 @@ The output jar will be in `build/libs/`.
 
 ## Compatibility
 
-| Minecraft     | Status                          |
-|---------------|---------------------------------|
-| 1.21.4        | ✅ Tested                       |
-| 1.21.2 – 1.21.x | ✅ Supported (please report issues) |
-| 1.21.0, 1.21.1 | ❌ Not supported (no `EntityRenderState`) |
-| 1.20.x        | Planned                         |
+| Minecraft       | Status                                  |
+|-----------------|-----------------------------------------|
+| 1.21.4          | ✅ Primary tested version               |
+| 1.21.5 – 1.21.x | ✅ Supported (please report issues)     |
+| ≤ 1.21.3        | ❌ Not supported (no `EntityRenderState`) |
+| 1.20.x          | Planned                                 |
+
+**Why 1.21.4 is the minimum:** in 1.21.4 Mojang refactored `PlayerEntityRenderer` to a render-state-driven system. Older versions accessed the entity directly during render and don't have the `updateRenderState(...)` hook this mod injects into.
 
 ## License
 
