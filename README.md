@@ -50,26 +50,35 @@ The output jar will be in `build/libs/`.
 
 ## Compatibility
 
-Two builds cover the supported range — Mojang refactored the entity-renderer
-internals between 1.21.8 and 1.21.11, so a single jar can't bind on both.
+Mojang refactored `PlayerEntityRenderer` between 1.21.8 and 1.21.11
+(generified, swapped `AbstractClientPlayerEntity` for `PlayerLikeEntity`,
+changed the `Style.withFont` parameter, etc.), so a single jar cannot bind
+on both ranges. This repo therefore ships **two parallel branches**:
 
-| Minecraft        | Build                | Status                                |
-|------------------|----------------------|---------------------------------------|
-| 1.21.4 – 1.21.8  | `0.1.x` (1.21.4 yarn) | ✅ Tested                             |
-| 1.21.9, 1.21.10  | `0.1.x` or `0.2.x`   | ⚠️ Untested — try the closest build   |
-| 1.21.11          | `0.2.x` (1.21.11 yarn) | ✅ Tested                            |
-| 1.21.12+         | `0.2.x`              | ✅ Likely works (please report)       |
-| ≤ 1.21.3         | —                    | ❌ Not supported (no `EntityRenderState`) |
-| 1.20.x           | —                    | Planned                               |
+| Minecraft        | Branch / tag                     | Jar version | Status                              |
+|------------------|----------------------------------|-------------|-------------------------------------|
+| 1.21.4 – 1.21.8  | [`legacy/1.21.4`](../../tree/legacy/1.21.4) / [`v0.1.1`](../../releases/tag/v0.1.1) | `0.1.1`     | ✅ Tested                           |
+| 1.21.9, 1.21.10  | either branch                    | —           | ⚠️ Untested — try the closer build |
+| 1.21.11          | [`main`](../../tree/main) / [`v0.2.0`](../../releases/tag/v0.2.0) | `0.2.0`     | ✅ Tested                           |
+| 1.21.12+         | `main`                           | `0.2.x`     | ✅ Likely works (please report)     |
+| ≤ 1.21.3         | —                                | —           | ❌ Not supported (no `EntityRenderState`) |
+| 1.20.x           | —                                | —           | Planned                             |
 
-**Why 1.21.4 is the floor:** in 1.21.4 Mojang refactored `PlayerEntityRenderer`
-to a render-state-driven system. Older versions accessed the entity directly
-during render and don't have the `updateRenderState(...)` hook this mod injects.
+**Picking the right branch when building from source:**
 
-**Why two builds:** in 1.21.11 Mojang generified `PlayerEntityRenderer` and
-introduced `PlayerLikeEntity`, which changed the mixin target's bytecode
-descriptor. The `main` branch tracks the 1.21.11+ build; the `0.1.x` line is
-maintained on the `legacy/1.21.4` branch for older patch versions.
+```sh
+# For Minecraft 1.21.11+
+git checkout main
+./gradlew build
+
+# For Minecraft 1.21.4 – 1.21.8
+git checkout legacy/1.21.4
+./gradlew build
+```
+
+**Why 1.21.4 is the floor:** Mojang introduced the `EntityRenderState`
+snapshot system in 1.21.4. Older versions don't have the `updateRenderState`
+hook this mod injects, so they cannot be supported without a separate mixin.
 
 ## License
 
