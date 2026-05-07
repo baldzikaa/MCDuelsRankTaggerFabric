@@ -65,7 +65,11 @@ public final class DebugCommand {
     }
 
     private static String formatEntry(com.mcduelstagger.cache.CacheEntry e) {
-        if (e.status() == CacheStatus.HIT) return "Cached HIT: " + e.rank() + " " + e.kit();
+        if (e.status() == CacheStatus.HIT) {
+            // Use the user-facing display strings (e.g. "HDi" / "Di") and the kit's
+            // short MCDuels label (e.g. "cpvp"), not raw enum names ("HDI" / "CRYSTAL").
+            return "Cached HIT: " + e.rank().display() + " " + e.kit().abbrev();
+        }
         if (e.status() == CacheStatus.MISS) return "Player not found on MCDuels (cached MISS).";
         return "Cached " + e.status();
     }
