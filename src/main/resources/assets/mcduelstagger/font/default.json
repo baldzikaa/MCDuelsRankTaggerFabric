@@ -1,0 +1,13 @@
+{
+  "providers": [
+    { "type": "bitmap", "file": "mcduelstagger:font/crystal.png",   "ascent": 7, "height": 8, "chars": [""] },
+    { "type": "bitmap", "file": "mcduelstagger:font/axe.png",       "ascent": 7, "height": 8, "chars": [""] },
+    { "type": "bitmap", "file": "mcduelstagger:font/mace.png",      "ascent": 7, "height": 8, "chars": [""] },
+    { "type": "bitmap", "file": "mcduelstagger:font/nethop.png",    "ascent": 7, "height": 8, "chars": [""] },
+    { "type": "bitmap", "file": "mcduelstagger:font/pot.png",       "ascent": 7, "height": 8, "chars": [""] },
+    { "type": "bitmap", "file": "mcduelstagger:font/smp.png",       "ascent": 7, "height": 8, "chars": [""] },
+    { "type": "bitmap", "file": "mcduelstagger:font/sword.png",     "ascent": 7, "height": 8, "chars": [""] },
+    { "type": "bitmap", "file": "mcduelstagger:font/uhc.png",       "ascent": 7, "height": 8, "chars": [""] },
+    { "type": "bitmap", "file": "mcduelstagger:font/spearmace.png", "ascent": 7, "height": 8, "chars": [""] }
+  ]
+}

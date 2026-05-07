@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+out/
+bin/
+
+# IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# Fabric runs
+run/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local logs / build output
+*.log
+build-output.txt

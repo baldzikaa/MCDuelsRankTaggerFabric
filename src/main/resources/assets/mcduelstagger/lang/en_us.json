@@ -1,0 +1,23 @@
+{
+  "key.mcduelstagger.toggle": "Toggle MCDuels Tags",
+  "category.mcduelstagger": "MCDuels Tagger",
+  "config.mcduelstagger.title": "MCDuels Rank Tagger",
+  "config.mcduelstagger.general": "General",
+  "config.mcduelstagger.kits": "Kits",
+  "config.mcduelstagger.cache": "Cache",
+  "config.mcduelstagger.enabled": "Enabled",
+  "config.mcduelstagger.showOnSelf": "Show on self",
+  "config.mcduelstagger.showOnSneaking": "Show on sneaking players",
+  "config.mcduelstagger.kit.crystal": "Crystal PvP",
+  "config.mcduelstagger.kit.axe": "Axe",
+  "config.mcduelstagger.kit.mace": "Mace",
+  "config.mcduelstagger.kit.nethop": "NethOp",
+  "config.mcduelstagger.kit.pot": "Pot",
+  "config.mcduelstagger.kit.smp": "SMP",
+  "config.mcduelstagger.kit.spearmace": "Spear Mace",
+  "config.mcduelstagger.kit.sword": "Sword",
+  "config.mcduelstagger.kit.uhc": "UHC",
+  "config.mcduelstagger.clearCache": "Clear cache",
+  "toast.mcduelstagger.on": "MCDuels Tags: ON",
+  "toast.mcduelstagger.off": "MCDuels Tags: OFF"
+}
