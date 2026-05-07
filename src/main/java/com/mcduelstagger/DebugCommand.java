@@ -74,8 +74,8 @@ public final class DebugCommand {
         var mc = MinecraftClient.getInstance();
         if (mc.getNetworkHandler() != null) {
             for (var p : mc.getNetworkHandler().getPlayerList()) {
-                if (p.getProfile().getName().equalsIgnoreCase(name)) {
-                    return p.getProfile().getId();
+                if (p.getProfile().name().equalsIgnoreCase(name)) {
+                    return p.getProfile().id();
                 }
             }
         }
