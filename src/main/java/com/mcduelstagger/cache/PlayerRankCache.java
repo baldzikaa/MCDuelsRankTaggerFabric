@@ -46,14 +46,15 @@ public final class PlayerRankCache {
 
     public void putFailed(UUID uuid) {
         Instant now = clock.get();
-        CacheEntry prev = entries.get(uuid);
-        int prevFailures = (prev != null && prev.status() == CacheStatus.FAILED) ? prev.failureCount() : 0;
-        int next = prevFailures + 1;
-        long seconds = Math.min(
-            TTL_FAILED_CAP.getSeconds(),
-            TTL_FAILED_BASE.getSeconds() * (1L << Math.min(next - 1, 4)));
-        entries.put(uuid, new CacheEntry(
-            CacheStatus.FAILED, null, null, now, now.plusSeconds(seconds), next));
+        // Atomic compute so concurrent failures for the same UUID don't lose backoff increments.
+        entries.compute(uuid, (k, prev) -> {
+            int prevFailures = (prev != null && prev.status() == CacheStatus.FAILED) ? prev.failureCount() : 0;
+            int next = prevFailures + 1;
+            long seconds = Math.min(
+                TTL_FAILED_CAP.getSeconds(),
+                TTL_FAILED_BASE.getSeconds() * (1L << Math.min(next - 1, 4)));
+            return new CacheEntry(CacheStatus.FAILED, null, null, now, now.plusSeconds(seconds), next);
+        });
     }
 
     public void clear() { entries.clear(); }
@@ -63,7 +64,10 @@ public final class PlayerRankCache {
         entries.entrySet().removeIf(e -> e.getValue().isExpired(now));
     }
 
-    public ConcurrentHashMap<UUID, CacheEntry> rawForPersistence() { return entries; }
+    /** Snapshot of current entries for the persistence layer — caller may iterate freely. */
+    public java.util.Map<UUID, CacheEntry> snapshotForPersistence() {
+        return java.util.Map.copyOf(entries);
+    }
 
     public void loadAll(java.util.Map<UUID, CacheEntry> snapshot) {
         Instant now = clock.get();

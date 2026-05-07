@@ -20,7 +20,7 @@ class CachePersistenceTest {
         Instant t = Instant.ofEpochSecond(1_700_000_000);
 
         var entries = new java.util.concurrent.ConcurrentHashMap<UUID, CacheEntry>();
-        entries.put(a, new CacheEntry(CacheStatus.HIT, Rank.HT1, Kit.CRYSTAL, t, t.plusSeconds(3600), 0));
+        entries.put(a, new CacheEntry(CacheStatus.HIT, Rank.HD, Kit.CRYSTAL, t, t.plusSeconds(3600), 0));
         entries.put(b, new CacheEntry(CacheStatus.MISS, null, null, t, t.plusSeconds(3600), 0));
         entries.put(UUID.randomUUID(), new CacheEntry(CacheStatus.FAILED, null, null, t, t.plusSeconds(60), 2));
 
@@ -28,7 +28,7 @@ class CachePersistenceTest {
         Map<UUID, CacheEntry> loaded = CachePersistence.load(file);
 
         assertEquals(2, loaded.size(), "FAILED entries must not be persisted");
-        assertEquals(Rank.HT1, loaded.get(a).rank());
+        assertEquals(Rank.HD, loaded.get(a).rank());
         assertEquals(CacheStatus.MISS, loaded.get(b).status());
     }
     @Test void corruptFileReturnsEmptyMap(@TempDir Path tmp) throws Exception {

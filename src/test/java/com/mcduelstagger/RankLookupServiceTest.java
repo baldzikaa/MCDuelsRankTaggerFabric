@@ -40,7 +40,7 @@ class RankLookupServiceTest {
         assertTrue(svc.lookup(u, "alice").isEmpty(), "synchronous miss");
         svc.awaitInFlight(u, 2_000);
         var r = svc.lookup(u, "alice").orElseThrow();
-        assertEquals(Rank.HT1, r.rank());
+        assertEquals(Rank.HD, r.rank());
         assertEquals(Kit.CRYSTAL, r.kit());
     }
     @Test void duplicateLookupsCoalesceIntoOneFetch() throws Exception {

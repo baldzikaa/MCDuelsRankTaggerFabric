@@ -13,15 +13,21 @@ public final class NameTagFormatter {
     private NameTagFormatter() {}
 
     /**
-     * Returns "<glyph> " — only the kit glyph (custom font + rank color), then a plain space.
-     * Top-level Text is intentionally empty so the appended player name keeps its own style
-     * (team / LuckPerms color) and the rank color does NOT bleed onto the name.
+     * Returns the prefix Text {@code "<glyph> <rank> | "} for use in front of a player nametag:
+     * <ul>
+     *   <li>The kit glyph uses the custom mcduelstagger font and inherits the renderer's
+     *       default color (so it doesn't fight with team / LuckPerms colors).</li>
+     *   <li>The rank label (e.g. {@code HD}, {@code Di}, {@code HG}) is the only piece tinted
+     *       with the rank's RGB color.</li>
+     * </ul>
+     * The top-level Text is intentionally empty-styled so the player's display name, when
+     * appended, keeps its own style with no color bleed from this prefix.
      */
     public static Text prefix(TierPicker.Result r) {
         String glyph = new String(Character.toChars(r.kit().glyphCodepoint()));
-        // Glyph: custom font, NO color (renders in default text color).
+        // Glyph: custom font, NO color (inherits whatever default the renderer applies).
         Style glyphStyle = Style.EMPTY.withFont(FONT);
-        // Rank label ("HT3", "LT4", ...): rank-colored, default font.
+        // Rank label: rank-colored, default font.
         Style rankStyle = Style.EMPTY.withColor(TextColor.fromRgb(r.rank().colorRgb()));
 
         MutableText t = Text.empty();

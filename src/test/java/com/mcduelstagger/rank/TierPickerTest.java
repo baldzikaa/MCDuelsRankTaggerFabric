@@ -25,7 +25,7 @@ class TierPickerTest {
     @Test void singleKitReturnsThatKit() {
         var r = TierPicker.pick(profile(kits("crystal", "high_dueler", 2400)),
                                 EnumSet.allOf(Kit.class)).orElseThrow();
-        assertEquals(Rank.HT1, r.rank());
+        assertEquals(Rank.HD, r.rank());
         assertEquals(Kit.CRYSTAL, r.kit());
     }
     @Test void emptyKitsReturnsEmpty() {
@@ -36,7 +36,7 @@ class TierPickerTest {
             "axe", "gold", 1500,
             "uhc", "high_diamond", 2200
         )), EnumSet.allOf(Kit.class)).orElseThrow();
-        assertEquals(Rank.HT2, r.rank());
+        assertEquals(Rank.HDI, r.rank());
         assertEquals(Kit.UHC, r.kit());
     }
     @Test void tieBreaksOnEloThenAlpha() {
@@ -57,7 +57,7 @@ class TierPickerTest {
             "crystal", "high_dueler", 2500,
             "uhc",     "diamond",     2000
         )), EnumSet.of(Kit.UHC)).orElseThrow();
-        assertEquals(Rank.LT2, r.rank());
+        assertEquals(Rank.DI, r.rank());
         assertEquals(Kit.UHC, r.kit());
     }
     @Test void allKitsDisabledReturnsEmpty() {
@@ -69,7 +69,7 @@ class TierPickerTest {
             "spearmace", "high_dueler", 9999,
             "axe",       "gold",        1200
         )), EnumSet.allOf(Kit.class)).orElseThrow();
-        assertEquals(Rank.LT3, r.rank());
+        assertEquals(Rank.G, r.rank());
         assertEquals(Kit.AXE, r.kit());
     }
 }

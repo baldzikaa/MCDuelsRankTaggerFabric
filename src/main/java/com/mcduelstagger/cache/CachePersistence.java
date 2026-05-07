@@ -6,7 +6,10 @@ import com.google.gson.JsonSyntaxException;
 import com.mcduelstagger.rank.Kit;
 import com.mcduelstagger.rank.Rank;
 
+import com.mcduelstagger.ModEntry;
+
 import java.io.IOException;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -14,7 +17,6 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class CachePersistence {
     public static final int VERSION = 1;
@@ -22,7 +24,7 @@ public final class CachePersistence {
 
     private CachePersistence() {}
 
-    public static void save(Path file, ConcurrentHashMap<UUID, CacheEntry> entries) {
+    public static void save(Path file, Map<UUID, CacheEntry> entries) {
         JsonObject root = new JsonObject();
         root.addProperty("version", VERSION);
         JsonObject map = new JsonObject();
@@ -38,12 +40,18 @@ public final class CachePersistence {
         });
         root.add("entries", map);
         try {
-            Files.createDirectories(file.getParent());
+            Path parent = file.getParent();
+            if (parent != null) Files.createDirectories(parent);
             Path tmp = file.resolveSibling(file.getFileName() + ".tmp");
             Files.writeString(tmp, GSON.toJson(root));
-            Files.move(tmp, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            try {
+                Files.move(tmp, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException atomicUnsupported) {
+                // Network share / oddball FS — fall back to a plain replace.
+                Files.move(tmp, file, StandardCopyOption.REPLACE_EXISTING);
+            }
         } catch (IOException ioe) {
-            System.err.println("[mcduelstagger] cache save failed: " + ioe.getMessage());
+            ModEntry.LOG.warn("cache save failed", ioe);
         }
     }
 

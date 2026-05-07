@@ -50,7 +50,14 @@ public final class RankLookupService {
             CompletableFuture<Void> done = client.fetchByUsername(username)
                 .handle((profile, err) -> {
                     if (err != null) {
-                        cache.putFailed(uuid);
+                        Throwable cause = err.getCause() != null ? err.getCause() : err;
+                        // Permanent (4xx) errors are not worth retrying — treat as MISS so the
+                        // longer MISS TTL applies instead of the FAILED exponential backoff.
+                        if (cause instanceof com.mcduelstagger.api.McDuelsClient.PermanentApiException) {
+                            cache.putMiss(uuid);
+                        } else {
+                            cache.putFailed(uuid);
+                        }
                     } else if (profile.isEmpty()) {
                         cache.putMiss(uuid);
                     } else {
