@@ -23,8 +23,19 @@ public final class ModEntry implements ClientModInitializer {
     private static volatile PlayerRankCache CACHE;
     private static volatile Path CACHE_FILE;
     private static volatile ScheduledExecutorService SCHEDULER;
+    private static volatile McDuelsClient CLIENT;
 
     public static RankLookupService lookupService() { return SERVICE; }
+
+    /** Save the config off the render thread. Cheap and idempotent — safe to call from anywhere. */
+    public static void scheduleConfigSave() {
+        ScheduledExecutorService s = SCHEDULER;
+        if (s == null) return;
+        s.submit(() -> {
+            try { ConfigHolder.save(); }
+            catch (Throwable t) { LOG.warn("config save failed", t); }
+        });
+    }
 
     @Override public void onInitializeClient() {
         ConfigHolder.register();
@@ -34,8 +45,8 @@ public final class ModEntry implements ClientModInitializer {
         CACHE = new PlayerRankCache();
         CACHE.loadAll(CachePersistence.load(CACHE_FILE));
 
-        var client = new McDuelsClient();
-        SERVICE = new RankLookupService(client, CACHE, ConfigHolder.get().allowedKits());
+        CLIENT = new McDuelsClient();
+        SERVICE = new RankLookupService(CLIENT, CACHE, ConfigHolder.get().allowedKits());
 
         Keybind.register();
         DebugCommand.register(CACHE);
@@ -44,14 +55,22 @@ public final class ModEntry implements ClientModInitializer {
             Thread t = new Thread(r, MOD_ID + "-scheduler"); t.setDaemon(true); return t;
         });
         SCHEDULER.scheduleAtFixedRate(() -> {
-            try { CachePersistence.save(CACHE_FILE, CACHE.rawForPersistence()); }
+            try { CachePersistence.save(CACHE_FILE, CACHE.snapshotForPersistence()); }
             catch (Throwable t) { LOG.warn("cache save failed", t); }
         }, 30, 30, TimeUnit.SECONDS);
         SCHEDULER.scheduleAtFixedRate(CACHE::evictExpired, 5, 5, TimeUnit.MINUTES);
 
         ClientLifecycleEvents.CLIENT_STOPPING.register(c -> {
-            try { CachePersistence.save(CACHE_FILE, CACHE.rawForPersistence()); } catch (Throwable ignored) {}
+            // Run the final save on the scheduler thread (off the render thread) and wait
+            // briefly so the cache is durable before we tear the executor down.
+            try {
+                SCHEDULER.submit(() -> CachePersistence.save(CACHE_FILE, CACHE.snapshotForPersistence()))
+                         .get(2, TimeUnit.SECONDS);
+            } catch (Throwable t) {
+                LOG.warn("final cache save failed", t);
+            }
             SCHEDULER.shutdownNow();
+            CLIENT.close();
         });
 
         LOG.info("MCDuels Rank Tagger initialized");

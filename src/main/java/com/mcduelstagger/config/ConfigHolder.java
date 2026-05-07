@@ -11,6 +11,7 @@ public final class ConfigHolder {
     public static void register() {
         HOLDER = AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
     }
-    public static ModConfig get()  { return HOLDER.getConfig(); }
-    public static void save()      { HOLDER.save(); }
+    /** Returns the loaded config, or null if {@link #register()} hasn't been called yet. */
+    public static ModConfig get()  { return HOLDER == null ? null : HOLDER.getConfig(); }
+    public static void save()      { if (HOLDER != null) HOLDER.save(); }
 }

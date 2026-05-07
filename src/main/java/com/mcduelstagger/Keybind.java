@@ -30,7 +30,8 @@ public final class Keybind {
     private static void onToggle(MinecraftClient client) {
         var cfg = ConfigHolder.get();
         cfg.enabled = !cfg.enabled;
-        ConfigHolder.save();
+        // Save asynchronously so spamming the keybind doesn't block the render thread on FS I/O.
+        com.mcduelstagger.ModEntry.scheduleConfigSave();
         SystemToast.show(client.getToastManager(),
             SystemToast.Type.PERIODIC_NOTIFICATION,
             Text.translatable(cfg.enabled ? "toast.mcduelstagger.on" : "toast.mcduelstagger.off"),

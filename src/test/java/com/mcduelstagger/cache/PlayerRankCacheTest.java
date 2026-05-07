@@ -19,16 +19,16 @@ class PlayerRankCacheTest {
     }
     @Test void hitRoundtrip() {
         var c = new PlayerRankCache(() -> Instant.ofEpochSecond(1000));
-        c.putHit(U, Rank.HT1, Kit.CRYSTAL);
+        c.putHit(U, Rank.HD, Kit.CRYSTAL);
         var e = c.get(U).orElseThrow();
         assertEquals(CacheStatus.HIT, e.status());
-        assertEquals(Rank.HT1, e.rank());
+        assertEquals(Rank.HD, e.rank());
         assertEquals(Kit.CRYSTAL, e.kit());
     }
     @Test void hitExpiresAfterTenMinutes() {
         long[] now = { 1000_000L };
         var c = new PlayerRankCache(() -> Instant.ofEpochSecond(now[0]));
-        c.putHit(U, Rank.HT1, Kit.CRYSTAL);
+        c.putHit(U, Rank.HD, Kit.CRYSTAL);
         now[0] += Duration.ofMinutes(9).toSeconds();
         assertTrue(c.get(U).isPresent());
         now[0] += Duration.ofMinutes(2).toSeconds();
@@ -60,7 +60,7 @@ class PlayerRankCacheTest {
         long[] now = { 0L };
         var c = new PlayerRankCache(() -> Instant.ofEpochSecond(now[0]));
         c.putFailed(U); c.putFailed(U); c.putFailed(U);
-        c.putHit(U, Rank.LT5, Kit.AXE);
+        c.putHit(U, Rank.I, Kit.AXE);
         c.putFailed(U);
         assertEquals(60, c.get(U).orElseThrow().expiresAt().getEpochSecond() - now[0]);
     }

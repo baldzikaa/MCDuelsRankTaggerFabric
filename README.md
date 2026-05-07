@@ -15,7 +15,8 @@ The prefix shows each player's kit icon and their highest tier (e.g. `⚔ HT3 | 
 
 ## Requirements
 
-- Minecraft **1.21.4**
+- Minecraft **1.21.4** or newer (1.21.x)
+- **Java 21** (required by Minecraft 1.21.4+)
 - [Fabric Loader](https://fabricmc.net/) 0.16.0 or newer
 - [Fabric API](https://modrinth.com/mod/fabric-api)
 - [Cloth Config API](https://modrinth.com/mod/cloth-config)
