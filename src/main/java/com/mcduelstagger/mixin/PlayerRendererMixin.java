@@ -5,9 +5,10 @@ import com.mcduelstagger.config.ConfigHolder;
 import com.mcduelstagger.rank.TierPicker;
 import com.mcduelstagger.render.NameTagFormatter;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
+import net.minecraft.entity.PlayerLikeEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.MutableText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,9 +29,9 @@ import java.util.Optional;
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerRendererMixin {
 
-    @Inject(method = "updateRenderState(Lnet/minecraft/client/network/AbstractClientPlayerEntity;Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;F)V",
+    @Inject(method = "updateRenderState(Lnet/minecraft/entity/PlayerLikeEntity;Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;F)V",
             at = @At("TAIL"))
-    private void mcduelstagger$prefixDisplayName(AbstractClientPlayerEntity player,
+    private void mcduelstagger$prefixDisplayName(PlayerLikeEntity player,
                                                  PlayerEntityRenderState state,
                                                  float tickDelta,
                                                  CallbackInfo ci) {
@@ -45,10 +46,13 @@ public abstract class PlayerRendererMixin {
         if (mc.getNetworkHandler() == null) return;
         if (mc.getNetworkHandler().getPlayerListEntry(player.getUuid()) == null) return;
 
+        // Mannequins / display-mode entities aren't real players — skip them.
+        if (!(player instanceof PlayerEntity realPlayer)) return;
+
         var svc = ModEntry.lookupService();
         if (svc == null) return;
 
-        Optional<TierPicker.Result> r = svc.lookup(player.getUuid(), player.getGameProfile().getName());
+        Optional<TierPicker.Result> r = svc.lookup(realPlayer.getUuid(), realPlayer.getGameProfile().name());
         if (r.isEmpty()) return;
 
         MutableText combined = NameTagFormatter.prefix(r.get()).copy();

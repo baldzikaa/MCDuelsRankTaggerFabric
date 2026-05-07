@@ -21,7 +21,7 @@ public final class Keybind {
                 "key.mcduelstagger.toggle",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_UNKNOWN,
-                "category.mcduelstagger"
+                KeyBinding.Category.MISC
             ));
         } catch (LinkageError e) {
             // KeyBinding's constructor signature changed in some 1.21.x patches.

@@ -3,6 +3,7 @@ package com.mcduelstagger.render;
 import com.mcduelstagger.rank.TierPicker;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
+import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
@@ -26,7 +27,7 @@ public final class NameTagFormatter {
     public static Text prefix(TierPicker.Result r) {
         String glyph = new String(Character.toChars(r.kit().glyphCodepoint()));
         // Glyph: custom font, NO color (inherits whatever default the renderer applies).
-        Style glyphStyle = Style.EMPTY.withFont(FONT);
+        Style glyphStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(FONT));
         // Rank label: rank-colored, default font.
         Style rankStyle = Style.EMPTY.withColor(TextColor.fromRgb(r.rank().colorRgb()));
 
