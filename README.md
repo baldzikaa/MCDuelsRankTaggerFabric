@@ -50,14 +50,26 @@ The output jar will be in `build/libs/`.
 
 ## Compatibility
 
-| Minecraft       | Status                                  |
-|-----------------|-----------------------------------------|
-| 1.21.4          | ✅ Primary tested version               |
-| 1.21.5 – 1.21.x | ✅ Supported (please report issues)     |
-| ≤ 1.21.3        | ❌ Not supported (no `EntityRenderState`) |
-| 1.20.x          | Planned                                 |
+Two builds cover the supported range — Mojang refactored the entity-renderer
+internals between 1.21.8 and 1.21.11, so a single jar can't bind on both.
 
-**Why 1.21.4 is the minimum:** in 1.21.4 Mojang refactored `PlayerEntityRenderer` to a render-state-driven system. Older versions accessed the entity directly during render and don't have the `updateRenderState(...)` hook this mod injects into.
+| Minecraft        | Build                | Status                                |
+|------------------|----------------------|---------------------------------------|
+| 1.21.4 – 1.21.8  | `0.1.x` (1.21.4 yarn) | ✅ Tested                             |
+| 1.21.9, 1.21.10  | `0.1.x` or `0.2.x`   | ⚠️ Untested — try the closest build   |
+| 1.21.11          | `0.2.x` (1.21.11 yarn) | ✅ Tested                            |
+| 1.21.12+         | `0.2.x`              | ✅ Likely works (please report)       |
+| ≤ 1.21.3         | —                    | ❌ Not supported (no `EntityRenderState`) |
+| 1.20.x           | —                    | Planned                               |
+
+**Why 1.21.4 is the floor:** in 1.21.4 Mojang refactored `PlayerEntityRenderer`
+to a render-state-driven system. Older versions accessed the entity directly
+during render and don't have the `updateRenderState(...)` hook this mod injects.
+
+**Why two builds:** in 1.21.11 Mojang generified `PlayerEntityRenderer` and
+introduced `PlayerLikeEntity`, which changed the mixin target's bytecode
+descriptor. The `main` branch tracks the 1.21.11+ build; the `0.1.x` line is
+maintained on the `legacy/1.21.4` branch for older patch versions.
 
 ## License
 
