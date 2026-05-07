@@ -52,7 +52,7 @@ The output jar will be in `build/libs/`.
 | Minecraft | Status              |
 |-----------|---------------------|
 | 1.21.4    | ✅ Supported         |
-| 1.21.x    | Planned             |
+| 1.21.x    | In Progress          |
 | 1.20.x    | Planned             |
 
 ## License
