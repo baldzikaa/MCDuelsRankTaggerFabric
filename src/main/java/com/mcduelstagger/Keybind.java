@@ -16,12 +16,22 @@ public final class Keybind {
     private Keybind() {}
 
     public static void register() {
-        TOGGLE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-            "key.mcduelstagger.toggle",
-            InputUtil.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
-            "category.mcduelstagger"
-        ));
+        try {
+            TOGGLE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.mcduelstagger.toggle",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                "category.mcduelstagger"
+            ));
+        } catch (LinkageError e) {
+            // KeyBinding's constructor signature changed in some 1.21.x patches.
+            // Skip registration on incompatible versions — the rest of the mod still works
+            // and on/off can be toggled from ModMenu.
+            com.mcduelstagger.ModEntry.LOG.warn(
+                "Toggle keybind unavailable on this Minecraft version (KeyBinding API changed). " +
+                "Use the ModMenu config screen to enable/disable.", e);
+            return;
+        }
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (TOGGLE.wasPressed()) onToggle(client);
         });
