@@ -24,7 +24,7 @@ The prefix shows each player's kit icon and their highest tier (e.g. `⚔ HT3 | 
 
 ## Installation
 
-1. Install Fabric Loader for Minecraft 1.21.4.+
+1. Install Fabric Loader for Minecraft 1.21.4.
 2. Drop Fabric API, Cloth Config, and `mcduels-tagger-<version>.jar` into your `mods/` folder.
 3. Launch Minecraft.
 
